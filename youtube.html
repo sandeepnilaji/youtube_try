@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      #nav_bar {
+        display: flex;
+        max-width: 100%;
+        height: 100px;
+        border: 1px solid black;
+        background-color: rgb(32, 32, 32);
+      }
+      #query {
+        margin-top: 2%;
+        width: 30%;
+        height: 20px;
+      }
+      #bt {
+        height: 27px;
+        margin-top: 2%;
+      }
+      #img_1 {
+        margin-left: 30px;
+        margin-top: 0.5%;
+        width: 300px;
+        height: 80px;
+        margin-right: 100px;
+      }
+      #img_1 img {
+        width: 300px;
+        height: 80px;
+      }
+      #videos {
+        display: grid;
+        grid-template-columns: repeat(3, 30%);
+        gap: 2%;
+      }
+      .container {
+        max-width: 100%;
+
+        border: 1px solid black;
+      }
+      .container iframe {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="nav_bar">
+      <div id="img_1">
+        <img
+          src="https://www.simplydigital.in/blogs/digital-marketing/wp-content/uploads/2018/10/how-to-watch-youtube-on-fire-tv.jpg"
+        />
+      </div>
+      <input type="text" id="query" />
+      <button onclick="video_search()" id="bt">Search</button>
+      <img
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJewS4ewn7mgvtjCsVRwP7gG_Ln09AjJbgSO5mvgPP34mUpKf-DQWmmgSgLiTpwtTtH1k&usqp=CAU"
+        style="height: 27px; margin-top: 2%"
+      />
+      <img
+        src="https://image.shutterstock.com/image-vector/video-outline-icon-vector-260nw-1692036301.jpg"
+        style="
+          height: 27px;
+          margin-top: 2%;
+          background-color: white;
+          margin-left: 250px;
+        "
+      />
+      <img
+        src="https://static.thenounproject.com/png/3077554-200.png"
+        style="
+          height: 27px;
+          margin-top: 2%;
+          background-color: white;
+          margin-left: 5px;
+        "
+      />
+      <img
+        src="https://www.seekpng.com/png/detail/941-9416917_notifications-bell-button-free-icon-svg-psd-png.png"
+        style="height: 27px; margin-top: 2%; margin-left: 5px"
+      />
+    </div>
+
+    <div id="videos"></div>
+  </body>
+</html>
+<script>
+  let videos_div = document.getElementById("videos");
+
+  async function video_search() {
+    videos_div.innerHTML = null;
+    let q = document.getElementById("query").value;
+
+    let res = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?q=${q}&key=AIzaSyBA3n_JJwYm--HmWnJK9VhbvmXCI2cRv1A&maxResults=20`
+    );
+    let data = await res.json();
+    // console.log(data);
+
+    let { items } = data;
+
+    items = items.filter((el) => {
+      return el.id.videoId != undefined;
+    });
+    items.forEach(({ id: { videoId } }) => {
+      //   console.log(videoId);
+      let div = document.createElement("div");
+      div.className = "container";
+      div.innerHTML = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}/" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      videos_div.appendChild(div);
+    });
+  }
+</script>
+<script src="youtube.js"></script>
